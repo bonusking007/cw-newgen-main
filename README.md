@@ -3853,10 +3853,7 @@ spawn(function()
     end)
 end)
 
-AASec:AddButton("FARM",function()
-    while task.wait(3) do
-        if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") then
-            wait(0.2)
+AASec:AddButton("Y axis",function()
             local player = game.Players.LocalPlayer
             local character = player.Character or player.CharacterAdded:Wait()
             local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
@@ -3869,34 +3866,6 @@ AASec:AddButton("FARM",function()
                 humanoidRootPart.CFrame = newCFrame
             end
             changeCFrameY(-200)
-            if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") then
-                function TP(gotoCFrame)
-                    pcall(function()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                    end)
-                    if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
-                        pcall(function() 
-                            tween:Cancel()
-                        end)
-                        game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
-                    else
-                        local tween_s = game:service"TweenService"
-                        local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/75, Enum.EasingStyle.Linear)
-                        local tween, err = pcall(function()
-                            tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
-                            tween:Play()
-                        end)
-                        if not tween then return err end
-                    end
-                end
-            
-                TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
-                wait(1)
-            end
-        else
-            wait(2)
-        end
-    end
 end)
 
 AASec:AddButton("BASEPLATE",function()
@@ -4432,7 +4401,13 @@ UtilitiesSec:AddButton("reset",function()
 end)
 
 UtilitiesSec:AddButton("Boxcover",function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/uptZSAjG"))()
+    local baseplate = Instance.new("Part")
+    baseplate.Parent = workspace
+    baseplate.Size = Vector3.new(30, 0, 30)
+    baseplate.Anchored = true
+    baseplate.Name = "Baseplate"
+    local desiredCFrame = CFrame.new(0.8385264873504639, -202.13294982910156, -33.203948974609375)
+    baseplate.Position = desiredCFrame.Position
 end)
 
 UtilitiesSec:AddButton("autohit",function()
