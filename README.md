@@ -3853,7 +3853,7 @@ spawn(function()
     end)
 end)
 
-AASec:AddButton("Y axis",function()
+AASec:AddButton("AUTOFARM",function()
             local player = game.Players.LocalPlayer
             local character = player.Character or player.CharacterAdded:Wait()
             local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
