@@ -3853,77 +3853,59 @@ spawn(function()
     end)
 end)
 
-AASec:AddButton("XZ",function()
-    local player = game.Players.LocalPlayer
-    local targetName = "Bonuschin009"
-    local targetPlayer = game.Players:FindFirstChild(targetName)
-
-if targetPlayer then
-    local function moveToPlayer()
-        local character = player.Character
-        local targetCharacter = targetPlayer.Character
-
-        if character and targetCharacter then
-            local rootPart = character:FindFirstChild("HumanoidRootPart")
-            local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
-
-            if rootPart and targetRootPart then
-                local playerCFrame = rootPart.CFrame
-                local targetCFrame = targetRootPart.CFrame
-
-                if playerCFrame == targetCFrame then
-                    return true -- Stop the loop if the CFrame is the same
-                end
-
-                local newX = playerCFrame.X + math.sign(targetCFrame.X - playerCFrame.X) * math.min(20, math.abs(targetCFrame.X - playerCFrame.X))
-                local newZ = playerCFrame.Z + math.sign(targetCFrame.Z - playerCFrame.Z) * math.min(20, math.abs(targetCFrame.Z - playerCFrame.Z))
-
-                rootPart.CFrame = CFrame.new(Vector3.new(newX, playerCFrame.Y, newZ))
+AASec:AddButton("FARM",function()
+    while task.wait(3) do
+        if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") then
+            wait(0.2)
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            local function changeCFrameY(newY)
+                local currentCFrame = humanoidRootPart.CFrame
+                local position = currentCFrame.Position
+                local rotation = currentCFrame - position
+                local newPosition = Vector3.new(position.X, newY, position.Z)
+                local newCFrame = CFrame.new(newPosition) * rotation
+                humanoidRootPart.CFrame = newCFrame
             end
-        end
-        return false
-    end
-
-    while wait(0.5) do
-        if moveToPlayer() then
-            break
-        end
-    end
-else
-    warn("Target player not found.")
-end
-
-end)
-
-AASec:AddButton("Y",function()
-    while wait(1.5) do
-        local player = game.Players.LocalPlayer
-        local targetName = "Bonuschin009"
-        local targetPlayer = game.Players:FindFirstChild(targetName)
-        
-        if targetPlayer then
-            local character = player.Character
-            local targetCharacter = targetPlayer.Character
-        
-            if character and targetCharacter then
-                local rootPart = character:FindFirstChild("HumanoidRootPart")
-                local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
-        
-                if rootPart and targetRootPart then
-                    local playerCFrame = rootPart.CFrame
-                    local targetCFrame = targetRootPart.CFrame
-        
-                    rootPart.CFrame = CFrame.new(playerCFrame.X, targetCFrame.Y, playerCFrame.Z)
-                else
-                    warn("HumanoidRootPart not found in one of the characters.")
+            changeCFrameY(-200)
+            if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") then
+                function TP(gotoCFrame)
+                    pcall(function()
+                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
+                    end)
+                    if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
+                        pcall(function() 
+                            tween:Cancel()
+                        end)
+                        game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
+                    else
+                        local tween_s = game:service"TweenService"
+                        local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/75, Enum.EasingStyle.Linear)
+                        local tween, err = pcall(function()
+                            tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
+                            tween:Play()
+                        end)
+                        if not tween then return err end
+                    end
                 end
-            else
-                warn("Character not found for one of the players.")
+            
+                TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
+                wait(1)
             end
         else
-            warn("Target player not found.")
+            wait(2)
         end
-        end
+    end
+end)
+
+AASec:AddButton("BASEPLATE",function()
+    local baseplate = Instance.new("Part")
+    baseplate.Parent = workspace
+    baseplate.Size = Vector3.new(5,0.3,5)
+    baseplate.Anchored = true
+    baseplate.Name = "Baseplate"
+    baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3,0)
 end)
 
 AASec:AddButton("SPAWN",function()
@@ -4232,7 +4214,7 @@ UtilitiesSec:AddButton("autofarm",function()
     end
 end)
 
-UtilitiesSec:AddButton("peoject",function()
+UtilitiesSec:AddButton("baseplate",function()
     --down
 local baseplate = Instance.new("Part")
 baseplate.Parent = workspace
@@ -4241,35 +4223,6 @@ baseplate.Anchored = true
 baseplate.Name = "Baseplate"
 local desiredCFrame = CFrame.new(0.8385264873504639, -203.13294982910156, -33.203948974609375)
 baseplate.Position = desiredCFrame.Position
--- down2
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(5, 0, 5)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -205.13294982910156, -33.203948974609375)
---down3
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(5, 0, 5)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -207.13294982910156, -33.203948974609375)
---down4
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(5, 0, 5)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -208.13294982910156, -33.203948974609375)
---down5
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(5, 0, 5)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -210.13294982910156, -33.203948974609375)
-baseplate.Position = desiredCFrame.Position
 --up
 local baseplate = Instance.new("Part")
 baseplate.Parent = workspace
@@ -4277,22 +4230,6 @@ baseplate.Size = Vector3.new(7, 0, 7)
 baseplate.Anchored = true
 baseplate.Name = "Baseplate"
 local desiredCFrame = CFrame.new(0.8385264873504639, -198.213294982910156, -33.203948974609375)
-baseplate.Position = desiredCFrame.Position
---up1
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(7, 0, 7)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -195.213294982910156, -33.203948974609375)
-baseplate.Position = desiredCFrame.Position
---up2
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(7, 0, 7)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -193.213294982910156, -33.203948974609375)
 baseplate.Position = desiredCFrame.Position
 end)
 
@@ -4498,10 +4435,8 @@ UtilitiesSec:AddButton("Boxcover",function()
     loadstring(game:HttpGet("https://pastebin.com/raw/uptZSAjG"))()
 end)
 
-UtilitiesSec:AddButton("Reset2mins",function()
-    while task.wait(120) do
-        game.Players.LocalPlayer.Character.Humanoid.Health = 0
-    end
+UtilitiesSec:AddButton("autohit",function()
+    print("hi")
 end)
 
 UtilitiesSec:AddButton("whitescreen E",function()
@@ -4518,14 +4453,6 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
         toggle3DRendering()
     end
 end)
-end)
-
-UtilitiesSec:AddButton("if<20hp",function()
-while task.wait(10) do
-    if game.Players.LocalPlayer.Character.Humanoid.Health < 20 then
-        game.Players.LocalPlayer.Character.Humanoid.Health = 0
-    end
-end
 end)
 
 UtilitiesSec:AddButton("rejoin",function()
