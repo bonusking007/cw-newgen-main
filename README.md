@@ -4137,71 +4137,61 @@ UtilitiesSec:AddToggle("noslow", false, function(parameter)
     nn_noslowdown = parameter
 end)
 
-UtilitiesSec:AddButton("autofarm",function()
+UtilitiesSec:AddButton("autofarm alt",function()
     while task.wait(0.5) do
         if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
             local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            local function changeCFrameY(newY)
+                local currentCFrame = humanoidRootPart.CFrame
+                local position = currentCFrame.Position
+                local rotation = currentCFrame - position
+                local newPosition = Vector3.new(position.X, newY, position.Z)
+                local newCFrame = CFrame.new(newPosition) * rotation
+                humanoidRootPart.CFrame = newCFrame
+            end
+            changeCFrameY(-200)
+            wait(0.1)
+            local player = game.Players.LocalPlayer
             local targetName = "kuyraiakup"
             local targetPlayer = game.Players:FindFirstChild(targetName)
-        
+            
             if targetPlayer then
                 local function moveToPlayer()
-                local character = player.Character
-                local targetCharacter = targetPlayer.Character
-        
-                if character and targetCharacter then
-                    local rootPart = character:FindFirstChild("HumanoidRootPart")
-                    local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
-        
-                    if rootPart and targetRootPart then
-                        local playerCFrame = rootPart.CFrame
-                        local targetCFrame = targetRootPart.CFrame
-        
-                        if playerCFrame == targetCFrame then
-                            return true -- Stop the loop if the CFrame is the same
+                    local character = player.Character
+                    local targetCharacter = targetPlayer.Character
+            
+                    if character and targetCharacter then
+                        local rootPart = character:FindFirstChild("HumanoidRootPart")
+                        local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
+            
+                        if rootPart and targetRootPart then
+                            local playerCFrame = rootPart.CFrame
+                            local targetCFrame = targetRootPart.CFrame
+            
+                            if playerCFrame == targetCFrame then
+                                return true -- Stop the loop if the CFrame is the same
+                            end
+            
+                            local newX = playerCFrame.X + math.sign(targetCFrame.X - playerCFrame.X) * math.min(20, math.abs(targetCFrame.X - playerCFrame.X))
+                            local newZ = playerCFrame.Z + math.sign(targetCFrame.Z - playerCFrame.Z) * math.min(20, math.abs(targetCFrame.Z - playerCFrame.Z))
+            
+                            rootPart.CFrame = CFrame.new(Vector3.new(newX, playerCFrame.Y, newZ))
                         end
-        
-                        local newX = playerCFrame.X + math.sign(targetCFrame.X - playerCFrame.X) * math.min(20, math.abs(targetCFrame.X - playerCFrame.X))
-                        local newZ = playerCFrame.Z + math.sign(targetCFrame.Z - playerCFrame.Z) * math.min(20, math.abs(targetCFrame.Z - playerCFrame.Z))
-        
-                        rootPart.CFrame = CFrame.new(Vector3.new(newX, playerCFrame.Y, newZ))
                     end
+                    return false
                 end
-                return false
-                end
-        
+            
                 while wait(0.5) do
                     if moveToPlayer() then
                         break
                     end
                 end
+            else
+                warn("Target player not found.")
             end
-                local player = game.Players.LocalPlayer
-                local targetName = "kuyraiakup"
-                local targetPlayer = game.Players:FindFirstChild(targetName)
-                
-                if targetPlayer then
-                    local character = player.Character
-                    local targetCharacter = targetPlayer.Character
-                
-                    if character and targetCharacter then
-                        local rootPart = character:FindFirstChild("HumanoidRootPart")
-                        local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
-                
-                        if rootPart and targetRootPart then
-                            local playerCFrame = rootPart.CFrame
-                            local targetCFrame = targetRootPart.CFrame
-                
-                            rootPart.CFrame = CFrame.new(playerCFrame.X, targetCFrame.Y, playerCFrame.Z)
-                        else
-                            warn("HumanoidRootPart not found in one of the characters.")
-                        end
-                    else
-                        warn("Character not found for one of the players.")
-                    end
-                else
-                    warn("Target player not found.")
-                end
+            
         else
             for i = 1, 15 do
                 game:GetService("VirtualInputManager"):SendKeyEvent(true,Enum.KeyCode.Space,false,game)
@@ -4211,23 +4201,54 @@ UtilitiesSec:AddButton("autofarm",function()
     end
 end)
 
-UtilitiesSec:AddButton("baseplate",function()
-    --down
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(3, 0, 3)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -203.13294982910156, -33.203948974609375)
-baseplate.Position = desiredCFrame.Position
---up
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(7, 0, 7)
-baseplate.Anchored = true
-baseplate.Name = "Baseplate"
-local desiredCFrame = CFrame.new(0.8385264873504639, -198.213294982910156, -33.203948974609375)
-baseplate.Position = desiredCFrame.Position
+UtilitiesSec:AddButton("autofarm main",function()
+    while task.wait(0.5) do
+        if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            local function changeCFrameY(newY)
+                local currentCFrame = humanoidRootPart.CFrame
+                local position = currentCFrame.Position
+                local rotation = currentCFrame - position
+                local newPosition = Vector3.new(position.X, newY, position.Z)
+                local newCFrame = CFrame.new(newPosition) * rotation
+                humanoidRootPart.CFrame = newCFrame
+            end
+            changeCFrameY(-200)
+            wait(0.2)
+            function TP(gotoCFrame)
+                pcall(function()
+                    game.Players.LocalPlayer.Character.Humanoid.Sit = false
+                end)
+                if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
+                    pcall(function() 
+                        tween:Cancel()
+                    end)
+                    game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
+                else
+                    local tween_s = game:service"TweenService"
+                    local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/75, Enum.EasingStyle.Linear)
+                    local tween, err = pcall(function()
+                        tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
+                        tween:Play()
+                    end)
+                    if not tween then return err end
+                end
+            end
+        
+            TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
+        end
+    end
+end)
+
+UtilitiesSec:AddButton("main base",function()
+    local baseplate = Instance.new("Part")
+    baseplate.Parent = workspace
+    baseplate.Size = Vector3.new(100,1,100)
+    baseplate.Anchored = true
+    baseplate.Name = "Baseplate"
+    baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-2,0)
 end)
 
 UtilitiesSec:AddButton("spawn",function()
@@ -4415,7 +4436,7 @@ end)
 UtilitiesSec:AddButton("Boxcover",function()
     local baseplate = Instance.new("Part")
     baseplate.Parent = workspace
-    baseplate.Size = Vector3.new(30, 0, 30)
+    baseplate.Size = Vector3.new(1000, 10, 1000)
     baseplate.Anchored = true
     baseplate.Name = "Baseplate"
     local desiredCFrame = CFrame.new(0.8385264873504639, -202.13294982910156, -33.203948974609375)
