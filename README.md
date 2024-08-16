@@ -4134,28 +4134,6 @@ spawn(function()
 end)
 
 UtilitiesSec:AddButton("Y axis",function()
-    while wait(0.5) do
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-        
-        local function changeCFrameY(newY)
-            while humanoidRootPart.Position.Y ~= newY do
-                local currentCFrame = humanoidRootPart.CFrame
-                local position = currentCFrame.Position
-                local rotation = currentCFrame - position
-                local newPosition = Vector3.new(position.X, newY, position.Z)
-                local newCFrame = CFrame.new(newPosition) * rotation
-                humanoidRootPart.CFrame = newCFrame
-                wait(0.5) -- Small delay to prevent overloading
-            end
-        end
-        
-        changeCFrameY(-200)
-    end
-end)
-
-UtilitiesSec:AddButton("Y axis alt",function()
     while wait(0.2) do
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
@@ -4169,7 +4147,29 @@ UtilitiesSec:AddButton("Y axis alt",function()
                 local newPosition = Vector3.new(position.X, newY, position.Z)
                 local newCFrame = CFrame.new(newPosition) * rotation
                 humanoidRootPart.CFrame = newCFrame
-                wait(0.5) -- Small delay to prevent overloading
+                wait(0.2) -- Small delay to prevent overloading
+            end
+        end
+        
+        changeCFrameY(-200)
+    end
+end)
+
+UtilitiesSec:AddButton("Y axis alt",function()
+    while wait(0.1) do
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
+        local function changeCFrameY(newY)
+            while humanoidRootPart.Position.Y ~= newY do
+                local currentCFrame = humanoidRootPart.CFrame
+                local position = currentCFrame.Position
+                local rotation = currentCFrame - position
+                local newPosition = Vector3.new(position.X, newY, position.Z)
+                local newCFrame = CFrame.new(newPosition) * rotation
+                humanoidRootPart.CFrame = newCFrame
+                wait(0.1) -- Small delay to prevent overloading
             end
         end
         
