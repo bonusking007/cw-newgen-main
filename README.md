@@ -4133,8 +4133,48 @@ spawn(function()
     end)
 end)
 
-UtilitiesSec:AddToggle("noslow", false, function(parameter)
-    nn_noslowdown = parameter
+UtilitiesSec:AddButton("Y axis",function()
+    while wait(0.5) do
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
+        local function changeCFrameY(newY)
+            while humanoidRootPart.Position.Y ~= newY do
+                local currentCFrame = humanoidRootPart.CFrame
+                local position = currentCFrame.Position
+                local rotation = currentCFrame - position
+                local newPosition = Vector3.new(position.X, newY, position.Z)
+                local newCFrame = CFrame.new(newPosition) * rotation
+                humanoidRootPart.CFrame = newCFrame
+                wait(0.5) -- Small delay to prevent overloading
+            end
+        end
+        
+        changeCFrameY(-200)
+    end
+end)
+
+UtilitiesSec:AddButton("Y axis alt",function()
+    while wait(0.2) do
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
+        local function changeCFrameY(newY)
+            while humanoidRootPart.Position.Y ~= newY do
+                local currentCFrame = humanoidRootPart.CFrame
+                local position = currentCFrame.Position
+                local rotation = currentCFrame - position
+                local newPosition = Vector3.new(position.X, newY, position.Z)
+                local newCFrame = CFrame.new(newPosition) * rotation
+                humanoidRootPart.CFrame = newCFrame
+                wait(0.5) -- Small delay to prevent overloading
+            end
+        end
+        
+        changeCFrameY(-199)
+    end
 end)
 
 UtilitiesSec:AddButton("autofarm alt",function()
@@ -4143,18 +4183,23 @@ UtilitiesSec:AddButton("autofarm alt",function()
             local player = game.Players.LocalPlayer
             local character = player.Character or player.CharacterAdded:Wait()
             local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
             local function changeCFrameY(newY)
-                local currentCFrame = humanoidRootPart.CFrame
-                local position = currentCFrame.Position
-                local rotation = currentCFrame - position
-                local newPosition = Vector3.new(position.X, newY, position.Z)
-                local newCFrame = CFrame.new(newPosition) * rotation
-                humanoidRootPart.CFrame = newCFrame
+                while humanoidRootPart.Position.Y ~= newY do
+                    local currentCFrame = humanoidRootPart.CFrame
+                    local position = currentCFrame.Position
+                    local rotation = currentCFrame - position
+                    local newPosition = Vector3.new(position.X, newY, position.Z)
+                    local newCFrame = CFrame.new(newPosition) * rotation
+                    humanoidRootPart.CFrame = newCFrame
+                    wait(0.5) -- Small delay to prevent overloading
+                end
             end
-            changeCFrameY(-200)
+        
+            changeCFrameY(-199)
             wait(0.1)
             local player = game.Players.LocalPlayer
-            local targetName = "kuyraiakup"
+            local targetName = "breakproject1"
             local targetPlayer = game.Players:FindFirstChild(targetName)
             
             if targetPlayer then
@@ -4174,8 +4219,8 @@ UtilitiesSec:AddButton("autofarm alt",function()
                                 return true -- Stop the loop if the CFrame is the same
                             end
             
-                            local newX = playerCFrame.X + math.sign(targetCFrame.X - playerCFrame.X) * math.min(20, math.abs(targetCFrame.X - playerCFrame.X))
-                            local newZ = playerCFrame.Z + math.sign(targetCFrame.Z - playerCFrame.Z) * math.min(20, math.abs(targetCFrame.Z - playerCFrame.Z))
+                            local newX = playerCFrame.X + math.sign(targetCFrame.X - playerCFrame.X) * math.min(40, math.abs(targetCFrame.X - playerCFrame.X))
+                            local newZ = playerCFrame.Z + math.sign(targetCFrame.Z - playerCFrame.Z) * math.min(40, math.abs(targetCFrame.Z - playerCFrame.Z))
             
                             rootPart.CFrame = CFrame.new(Vector3.new(newX, playerCFrame.Y, newZ))
                         end
@@ -4183,7 +4228,7 @@ UtilitiesSec:AddButton("autofarm alt",function()
                     return false
                 end
             
-                while wait(0.5) do
+                while wait(0.3) do
                     if moveToPlayer() then
                         break
                     end
@@ -4191,53 +4236,57 @@ UtilitiesSec:AddButton("autofarm alt",function()
             else
                 warn("Target player not found.")
             end
-            
         else
-            for i = 1, 15 do
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,Enum.KeyCode.Space,false,game)
-                wait(0.2) -- Small delay to ensure key presses are registered properly
-            end
+            wait(2)
         end
     end
 end)
 
 UtilitiesSec:AddButton("autofarm main",function()
-    while task.wait(0.5) do
+    while task.wait(2) do
         if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
             local player = game.Players.LocalPlayer
             local character = player.Character or player.CharacterAdded:Wait()
             local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
             local function changeCFrameY(newY)
-                local currentCFrame = humanoidRootPart.CFrame
-                local position = currentCFrame.Position
-                local rotation = currentCFrame - position
-                local newPosition = Vector3.new(position.X, newY, position.Z)
-                local newCFrame = CFrame.new(newPosition) * rotation
-                humanoidRootPart.CFrame = newCFrame
-            end
-            changeCFrameY(-200)
-            wait(0.2)
-            function TP(gotoCFrame)
-                pcall(function()
-                    game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                end)
-                if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
-                    pcall(function() 
-                        tween:Cancel()
-                    end)
-                    game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
-                else
-                    local tween_s = game:service"TweenService"
-                    local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/75, Enum.EasingStyle.Linear)
-                    local tween, err = pcall(function()
-                        tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
-                        tween:Play()
-                    end)
-                    if not tween then return err end
+                while humanoidRootPart.Position.Y ~= newY do
+                    local currentCFrame = humanoidRootPart.CFrame
+                    local position = currentCFrame.Position
+                    local rotation = currentCFrame - position
+                    local newPosition = Vector3.new(position.X, newY, position.Z)
+                    local newCFrame = CFrame.new(newPosition) * rotation
+                    humanoidRootPart.CFrame = newCFrame
+                    wait(0.1) -- Small delay to prevent overloading
                 end
             end
         
-            TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
+            changeCFrameY(-200)
+        
+            wait(0.2)
+            if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") then
+                function TP(gotoCFrame)
+                    pcall(function()
+                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
+                    end)
+                    if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
+                        pcall(function() 
+                            tween:Cancel()
+                        end)
+                        game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
+                    else
+                        local tween_s = game:service"TweenService"
+                        local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/75, Enum.EasingStyle.Linear)
+                        local tween, err = pcall(function()
+                            tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
+                            tween:Play()
+                        end)
+                        if not tween then return err end
+                    end
+                end
+        
+                TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
+            end
         end
     end
 end)
@@ -4245,10 +4294,22 @@ end)
 UtilitiesSec:AddButton("main base",function()
     local baseplate = Instance.new("Part")
     baseplate.Parent = workspace
-    baseplate.Size = Vector3.new(100,1,100)
+    baseplate.Size = Vector3.new(100,0.3,100)
     baseplate.Anchored = true
     baseplate.Name = "Baseplate"
     baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-2,0)
+end)
+
+UtilitiesSec:AddButton("spin",function()
+    local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+while true do
+    rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(10), 0)
+    wait(5) -- Adjust the speed of the spin by changing this value
+end
+
 end)
 
 UtilitiesSec:AddButton("spawn",function()
@@ -4360,12 +4421,30 @@ end
 noclip() -- to toggle noclip() and clip()
 end)
 
-UtilitiesSec:AddButton("fast reset",function()
-    while task.wait(0.5) do
-        if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health < 30 then
-            game.Players.LocalPlayer.Character.Humanoid.Health = 0
-        end
-    end
+UtilitiesSec:AddButton("K press",function()
+    -- Get the VirtualInputManager service
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+-- Function to press and release the "K" key
+local function pressKeyK()
+    -- Simulate pressing the "K" key
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.K, false, game)
+    
+    -- Optionally wait for a short period
+    wait(0.1)
+    
+    -- Simulate releasing the "K" key
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.K, false, game)
+end
+
+-- Continuous loop to keep pressing and releasing the "K" key
+while true do
+    pressKeyK()
+    
+    -- Wait for a minute (60 seconds) before pressing the key again
+    wait(120) -- Adjust this value as needed
+end
+
 end)
 
 UtilitiesSec:AddButton("floating",function()
