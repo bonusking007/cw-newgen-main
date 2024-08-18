@@ -3734,9 +3734,6 @@ game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = parameter
 end)
 
 
-
-
-
 FakeAnimationsSec:AddDropdown("Run", {"None","Rthro", "Zombie","Werewolf","Ninja","Toy","Superhero","OldSchool","Cartoony","Stylish","Vampire"}, "None", false, function(dropdown)
     zxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx = dropdown
 end)
@@ -4178,68 +4175,84 @@ UtilitiesSec:AddButton("Y axis alt",function()
 end)
 
 UtilitiesSec:AddButton("autofarm alt",function()
-    while task.wait(0.5) do
-        if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-        
-            local function changeCFrameY(newY)
-                while humanoidRootPart.Position.Y ~= newY do
-                    local currentCFrame = humanoidRootPart.CFrame
-                    local position = currentCFrame.Position
-                    local rotation = currentCFrame - position
-                    local newPosition = Vector3.new(position.X, newY, position.Z)
-                    local newCFrame = CFrame.new(newPosition) * rotation
-                    humanoidRootPart.CFrame = newCFrame
-                    wait(0.5) -- Small delay to prevent overloading
-                end
-            end
-        
-            changeCFrameY(-199)
-            wait(0.1)
-            local player = game.Players.LocalPlayer
-            local targetName = "breakproject1"
-            local targetPlayer = game.Players:FindFirstChild(targetName)
-            
-            if targetPlayer then
-                local function moveToPlayer()
-                    local character = player.Character
-                    local targetCharacter = targetPlayer.Character
-            
-                    if character and targetCharacter then
-                        local rootPart = character:FindFirstChild("HumanoidRootPart")
-                        local targetRootPart = targetCharacter:FindFirstChild("HumanoidRootPart")
-            
-                        if rootPart and targetRootPart then
-                            local playerCFrame = rootPart.CFrame
-                            local targetCFrame = targetRootPart.CFrame
-            
-                            if playerCFrame == targetCFrame then
-                                return true -- Stop the loop if the CFrame is the same
-                            end
-            
-                            local newX = playerCFrame.X + math.sign(targetCFrame.X - playerCFrame.X) * math.min(40, math.abs(targetCFrame.X - playerCFrame.X))
-                            local newZ = playerCFrame.Z + math.sign(targetCFrame.Z - playerCFrame.Z) * math.min(40, math.abs(targetCFrame.Z - playerCFrame.Z))
-            
-                            rootPart.CFrame = CFrame.new(Vector3.new(newX, playerCFrame.Y, newZ))
+    local player = game.Players.LocalPlayer
+
+    local function checkBatonAndPosition()
+        local character = player.Character
+        if character then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local yPos = humanoidRootPart.Position.Y
+                if yPos >= -220 and yPos <= -190 then
+                    -- Check if the player is holding the "Baton"
+                    local tool = character:FindFirstChildOfClass("Tool")
+                    if tool and tool.Name == "Baton" then
+                        function TP(gotoCFrame)
+                        pcall(function()
+                            game.Players.LocalPlayer.Character.Humanoid.Sit = false
+                        end)
+                        if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
+                            pcall(function() 
+                                tween:Cancel()
+                            end)
+                            game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
+                        else
+                            local tween_s = game:service"TweenService"
+                            local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/50, Enum.EasingStyle.Linear)
+                            local tween, err = pcall(function()
+                                tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
+                                tween:Play()
+                            end)
+                            if not tween then return err end
                         end
                     end
-                    return false
-                end
-            
-                while wait(0.3) do
-                    if moveToPlayer() then
-                        break
+        
+                    TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
+                    else
+                        wait(0.15)
+                    end
+                else
+                    local player = game.Players.LocalPlayer
+                local character = player.Character or player.CharacterAdded:Wait()
+                local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
+                local function changeCFrameY(newY)
+                    while humanoidRootPart.Position.Y ~= newY do
+                        local currentCFrame = humanoidRootPart.CFrame
+                        local position = currentCFrame.Position
+                        local rotation = currentCFrame - position
+                        local newPosition = Vector3.new(position.X, newY, position.Z)
+                        local newCFrame = CFrame.new(newPosition) * rotation
+                        humanoidRootPart.CFrame = newCFrame
+                        wait(0.1) -- Small delay to prevent overloading
                     end
                 end
-            else
-                warn("Target player not found.")
+        
+                changeCFrameY(-199)
+                end
             end
-        else
-            wait(2)
         end
     end
+
+    local function setupToolChecking()
+        -- Run the check initially
+        checkBatonAndPosition()
+    
+        -- Monitor tool changes
+        player.Character.ChildAdded:Connect(checkBatonAndPosition)
+        player.Character.ChildRemoved:Connect(checkBatonAndPosition)
+    
+        -- Monitor character respawn
+        player.CharacterAdded:Connect(function()
+            checkBatonAndPosition()
+            -- Reconnect tool checking after respawn
+            player.Character.ChildAdded:Connect(checkBatonAndPosition)
+            player.Character.ChildRemoved:Connect(checkBatonAndPosition)
+        end)
+    end
+
+    setupToolChecking()
+
 end)
 
 UtilitiesSec:AddButton("autofarm main",function()
@@ -4276,7 +4289,7 @@ UtilitiesSec:AddButton("autofarm main",function()
                         game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
                     else
                         local tween_s = game:service"TweenService"
-                        local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/75, Enum.EasingStyle.Linear)
+                        local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/70, Enum.EasingStyle.Linear)
                         local tween, err = pcall(function()
                             tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
                             tween:Play()
@@ -4297,19 +4310,11 @@ UtilitiesSec:AddButton("main base",function()
     baseplate.Size = Vector3.new(100,0.3,100)
     baseplate.Anchored = true
     baseplate.Name = "Baseplate"
-    baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-2,0)
+    baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3,0)
 end)
 
 UtilitiesSec:AddButton("spin",function()
-    local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local rootPart = character:WaitForChild("HumanoidRootPart")
-
-while true do
-    rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(10), 0)
-    wait(5) -- Adjust the speed of the spin by changing this value
-end
-
+    print("hi")
 end)
 
 UtilitiesSec:AddButton("spawn",function()
@@ -4540,6 +4545,55 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
         toggle3DRendering()
     end
 end)
+end)
+
+UtilitiesSec:AddButton("Inf anchored",function()
+    while wait(0.5) do
+        if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+        else
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+        end
+    end
+end)
+
+UtilitiesSec:AddButton("Tp2grave",function()
+    local players = game:GetService('Players')
+local lplr = players.LocalPlayer
+local lastCF, stop, heartbeatConnection
+local function start()
+    heartbeatConnection = game:GetService('RunService').Heartbeat:Connect(function()
+        if stop then
+            return 
+        end 
+        lastCF = lplr.Character:FindFirstChildOfClass('Humanoid').RootPart.CFrame
+    end)
+    lplr.Character:FindFirstChildOfClass('Humanoid').RootPart:GetPropertyChangedSignal('CFrame'):Connect(function()
+        stop = true
+        lplr.Character:FindFirstChildOfClass('Humanoid').RootPart.CFrame = lastCF
+        game:GetService('RunService').Heartbeat:Wait()
+        stop = false
+    end)    
+    lplr.Character:FindFirstChildOfClass('Humanoid').Died:Connect(function()
+        heartbeatConnection:Disconnect()
+    end)
+end
+
+lplr.CharacterAdded:Connect(function(character)
+    repeat 
+        game:GetService('RunService').Heartbeat:Wait() 
+    until character:FindFirstChildOfClass('Humanoid')
+    repeat 
+        game:GetService('RunService').Heartbeat:Wait() 
+    until character:FindFirstChildOfClass('Humanoid').RootPart
+    start()
+end)
+
+lplr.CharacterRemoving:Connect(function()
+    heartbeatConnection:Disconnect()
+end)
+
+start()
 end)
 
 UtilitiesSec:AddButton("rejoin",function()
