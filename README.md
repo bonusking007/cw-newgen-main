@@ -4256,50 +4256,30 @@ UtilitiesSec:AddButton("autofarm alt",function()
 end)
 
 UtilitiesSec:AddButton("autofarm main",function()
-    while task.wait(2) do
+    while task.wait(5) do
         if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") and game.Players.LocalPlayer.Character.Humanoid.Health > 0 then
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-        
-            local function changeCFrameY(newY)
-                while humanoidRootPart.Position.Y ~= newY do
-                    local currentCFrame = humanoidRootPart.CFrame
-                    local position = currentCFrame.Position
-                    local rotation = currentCFrame - position
-                    local newPosition = Vector3.new(position.X, newY, position.Z)
-                    local newCFrame = CFrame.new(newPosition) * rotation
-                    humanoidRootPart.CFrame = newCFrame
-                    wait(0.1) -- Small delay to prevent overloading
-                end
-            end
-        
-            changeCFrameY(-200)
-        
-            wait(0.2)
-            if game.Players.LocalPlayer.PlayerGui.RoactUI:FindFirstChild("BottomStatusIndicators") then
-                function TP(gotoCFrame)
-                    pcall(function()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
+            function TP(gotoCFrame)
+                pcall(function()
+                    game.Players.LocalPlayer.Character.Humanoid.Sit = false
+                end)
+                if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
+                    pcall(function() 
+                        tween:Cancel()
                     end)
-                    if (game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude <= 100 then
-                        pcall(function() 
-                            tween:Cancel()
-                        end)
-                        game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
-                    else
-                        local tween_s = game:service"TweenService"
-                        local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/70, Enum.EasingStyle.Linear)
-                        local tween, err = pcall(function()
-                            tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
-                            tween:Play()
-                        end)
-                        if not tween then return err end
-                    end
+                    game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.CFrame = gotoCFrame
+                else
+                    local tween_s = game:service"TweenService"
+                    local info = TweenInfo.new((game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart.Position - gotoCFrame.Position).Magnitude/70, Enum.EasingStyle.Linear)
+                    local tween, err = pcall(function()
+                        tween = tween_s:Create(game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = gotoCFrame})
+                        tween:Play()
+                    end)
+                    if not tween then return err end
                 end
-        
-                TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
             end
+        
+            TP(CFrame.new(0.8385264873504639, -200.213294982910156, -33.203948974609375))
+            wait(3)
         end
     end
 end)
@@ -4313,8 +4293,10 @@ UtilitiesSec:AddButton("main base",function()
     baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3,0)
 end)
 
-UtilitiesSec:AddButton("spin",function()
-    print("hi")
+UtilitiesSec:AddButton("reset30sec",function()
+    while wait(30) do
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    end
 end)
 
 UtilitiesSec:AddButton("spawn",function()
